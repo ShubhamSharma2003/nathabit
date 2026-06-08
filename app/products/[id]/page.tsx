@@ -46,9 +46,12 @@ export async function generateMetadata({
         type: "website",
       },
     };
-  } catch {
-    // Missing product: give crawlers a sane title; the page renders the 404.
-    return { title: "Product not found" };
+  } catch (err) {
+    // Trigger notFound() here, in the metadata phase — it runs BEFORE the body
+    // streams, so Next can set a real 404 status (not 200) for crawlers. The
+    // page body's notFound() below is the safety net.
+    if (err instanceof NotFoundError) notFound();
+    return { title: "Product" };
   }
 }
 

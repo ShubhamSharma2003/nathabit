@@ -28,10 +28,13 @@ export async function generateMetadata({
   const { slug } = await params;
   // getCategories is cached, so this call is deduped with the page's call below.
   const categories = await getCategories();
-  const name = categories.find((c) => c.slug === slug)?.name ?? slug.replace(/-/g, " ");
+  const category = categories.find((c) => c.slug === slug);
+  // Validate the slug here, in the metadata phase (before the body streams), so
+  // an unknown category returns a real 404 status rather than 200.
+  if (!category) notFound();
   return {
-    title: `${name} products`,
-    description: `Browse ${name} products at Nat Habit.`,
+    title: `${category.name} products`,
+    description: `Browse ${category.name} products at Nat Habit.`,
   };
 }
 
