@@ -1,27 +1,33 @@
 import Link from "next/link";
+import HeaderSearch from "./HeaderSearch";
+import WishlistCount from "./WishlistCount";
 
-// Top navigation. This is intentionally a Server Component shell — it ships no
-// client JS. The interactive, live-updating wishlist count is added separately
-// as a tiny client island in a later step, so only that badge hydrates.
+// Top navigation. The header itself is a Server Component — only the two small
+// islands inside it (search field + live wishlist count) hydrate, so we ship the
+// minimum possible client JS for the chrome that's on every page.
 export default function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-brand-border bg-brand-cream/90 backdrop-blur">
-      <div className="wrap flex h-16 items-center justify-between gap-4">
+      <div className="wrap flex h-16 items-center gap-4">
         <Link
           href="/"
-          className="font-serif text-xl font-semibold text-brand-forest"
+          className="whitespace-nowrap font-serif text-xl font-semibold text-brand-forest"
         >
           Nat&nbsp;Habit
         </Link>
-        <nav className="flex items-center gap-6 text-sm">
+
+        <HeaderSearch />
+
+        <nav className="flex items-center gap-5 text-sm">
           <Link href="/" className="transition-colors hover:text-brand-forest">
             Home
           </Link>
-          <Link href="/search" className="transition-colors hover:text-brand-forest">
-            Search
-          </Link>
-          <Link href="/wishlist" className="transition-colors hover:text-brand-forest">
+          <Link
+            href="/wishlist"
+            className="inline-flex items-center transition-colors hover:text-brand-forest"
+          >
             Wishlist
+            <WishlistCount />
           </Link>
         </nav>
       </div>
