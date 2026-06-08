@@ -51,11 +51,12 @@ export const getProductsPage = cache(
     }),
 );
 
-// Homepage "featured" rail — just the first N products, hourly freshness.
+// Homepage "featured" rail — the highest-rated products (sorted server-side so
+// we only transfer the N we show). Hourly freshness like the rest of the catalog.
 export const getFeaturedProducts = cache(
   async (limit = 8): Promise<Product[]> => {
     const data = await getJson<ProductsResponse>(
-      `${BASE}/products?limit=${limit}&skip=0`,
+      `${BASE}/products?limit=${limit}&skip=0&sortBy=rating&order=desc`,
       { next: { revalidate: HOUR, tags: ["products"] } },
     );
     return data.products;
