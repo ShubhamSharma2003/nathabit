@@ -1,12 +1,20 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProduct, getProductsPage, NotFoundError } from "@/lib/dummyjson";
+import {
+  getProduct,
+  getProductsPage,
+  getCategoryProducts,
+  NotFoundError,
+} from "@/lib/dummyjson";
 import { formatPrice, discountedPrice } from "@/lib/utils";
 import Rating from "@/components/Rating";
 import WishlistButton from "@/components/WishlistButton";
 import LiveStock from "@/components/LiveStock";
+import ProductRail from "@/components/ProductRail";
+import GridSkeleton from "@/components/skeletons/GridSkeleton";
 
 // RENDERING STRATEGY: ISR.
 // A product's SEO content (title, description, image) rarely changes and prices
@@ -99,7 +107,7 @@ export default async function ProductPage({
         <div className="flex flex-col gap-5">
           <Link
             href={`/categories/${product.category}`}
-            className="w-fit rounded-full bg-pop-leaf/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-pop-leaf transition-colors hover:bg-pop-leaf hover:text-white"
+            className="w-fit rounded-full bg-pop-grape/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-pop-grape transition-colors hover:bg-pop-grape hover:text-white"
           >
             {product.category}
           </Link>
@@ -141,6 +149,39 @@ export default async function ProductPage({
           <p className="text-sm text-ink/45">Tap the ♥ on the image to save this to your wishlist.</p>
         </div>
       </div>
+
+      {/* "You might also like" — products from the same category. Streamed in a
+          Suspense boundary so the main product renders first and this fills in
+          after, without blocking the page. */}
+      <div className="mt-16">
+        <Suspense fallback={<GridSkeleton count={4} />}>
+          <SimilarProducts category={product.category} excludeId={product.id} />
+        </Suspense>
+      </div>
     </div>
+  );
+}
+
+// Same-category recommendations, excluding the product being viewed. Uses the
+// cached category endpoint (revalidate 1h, matching this page), so it doesn't
+// lower the route's cache.
+async function SimilarProducts({
+  category,
+  excludeId,
+}: {
+  category: string;
+  excludeId: number;
+}) {
+  const data = await getCategoryProducts(category, 8, 0);
+  const items = data.products.filter((p) => p.id !== excludeId).slice(0, 4);
+  return (
+    <ProductRail
+      title={
+        <>
+          You might also <span className="text-pop-pink">like</span>
+        </>
+      }
+      products={items}
+    />
   );
 }

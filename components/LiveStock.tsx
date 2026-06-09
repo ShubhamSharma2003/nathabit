@@ -49,7 +49,7 @@ export default function LiveStock({ id }: { id: number }) {
     ? "bg-pop-berry/10 text-pop-berry"
     : low
       ? "bg-pop-sun/25 text-ink"
-      : "bg-pop-leaf/15 text-pop-leaf";
+      : "bg-tint-sky text-ink";
   const label = out ? "Out of stock" : `${data.availabilityStatus} · ${data.stock} left`;
 
   return (

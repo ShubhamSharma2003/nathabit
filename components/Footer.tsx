@@ -2,7 +2,7 @@
 // so it stays a Server Component and ships zero client JS.
 export default function Footer() {
   return (
-    <footer className="mt-20 bg-pop-forest text-paper">
+    <footer className="mt-20 bg-pop-plum text-paper">
       <div className="wrap py-14">
         <p className="font-display text-5xl font-extrabold sm:text-7xl">
           Nat Habit

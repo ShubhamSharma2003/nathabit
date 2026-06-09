@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useWishlist } from "@/store/wishlist";
+import { useToast } from "@/store/toast";
 import { cn } from "@/lib/utils";
 
 // Heart toggle shown on cards and the product detail page. Client Component
@@ -15,6 +16,7 @@ export default function WishlistButton({
   className?: string;
 }) {
   const toggle = useWishlist((s) => s.toggle);
+  const showToast = useToast((s) => s.show);
   // Subscribe to only this product's membership so the button re-renders just
   // when its own state flips.
   const active = useWishlist((s) => s.ids.includes(productId));
@@ -28,7 +30,13 @@ export default function WishlistButton({
   return (
     <button
       type="button"
-      onClick={() => toggle(productId)}
+      onClick={() => {
+        // `active` still reflects the pre-toggle state here, so we can phrase the
+        // toast for the action that's about to happen.
+        toggle(productId);
+        if (active) showToast("Removed from wishlist");
+        else showToast("Added to wishlist ♥", "pink");
+      }}
       aria-pressed={isActive}
       aria-label={isActive ? "Remove from wishlist" : "Add to wishlist"}
       className={cn(

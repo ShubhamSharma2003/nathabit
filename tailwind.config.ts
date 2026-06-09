@@ -60,10 +60,16 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
         },
+        // Toast slide + fade in.
+        "toast-in": {
+          from: { opacity: "0", transform: "translateY(10px) scale(0.96)" },
+          to: { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
       },
       animation: {
-        marquee: "marquee 22s linear infinite",
+        marquee: "marquee 28s linear infinite",
         float: "float 6s ease-in-out infinite",
+        "toast-in": "toast-in 0.22s cubic-bezier(0.22,1,0.36,1)",
       },
     },
   },

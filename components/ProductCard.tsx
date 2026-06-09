@@ -36,11 +36,13 @@ export default function ProductCard({
   const tint = TINTS[tone % TINTS.length];
 
   return (
-    <div className="group flex flex-col">
+    <div className="group flex flex-col transition-transform duration-200 hover:-translate-y-1.5">
       {/* Tinted image panel. Fixed aspect ratio reserves space before the image
           loads → no layout shift (CLS). The heart floats over it, outside the
           <Link>, so tapping it toggles the wishlist instead of navigating. */}
-      <div className={`relative aspect-square overflow-hidden rounded-4xl ${tint}`}>
+      <div
+        className={`relative aspect-square overflow-hidden rounded-4xl shadow-sm transition-shadow duration-200 group-hover:shadow-xl ${tint}`}
+      >
         <div className="absolute right-3 top-3 z-10">
           <WishlistButton productId={product.id} />
         </div>
@@ -61,7 +63,7 @@ export default function ProductCard({
         <span className="text-[11px] font-bold uppercase tracking-wider text-ink/45">
           {product.category}
         </span>
-        <h3 className="line-clamp-1 font-display text-lg font-extrabold leading-tight text-ink">
+        <h3 className="line-clamp-1 font-display text-lg font-extrabold leading-tight text-ink transition-colors group-hover:text-pop-tangerine">
           {product.title}
         </h3>
         <div className="mt-0.5">

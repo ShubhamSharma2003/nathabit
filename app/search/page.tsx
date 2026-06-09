@@ -1,10 +1,12 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import type { Metadata } from "next";
 import SearchBox from "@/components/SearchBox";
 import ProductGrid from "@/components/ProductGrid";
+import ProductRail from "@/components/ProductRail";
 import Pagination from "@/components/Pagination";
 import GridSkeleton from "@/components/skeletons/GridSkeleton";
-import { searchProducts } from "@/lib/dummyjson";
+import { searchProducts, getFeaturedProducts } from "@/lib/dummyjson";
 
 // RENDERING STRATEGY: dynamic SSR.
 // Reading searchParams opts this route into dynamic rendering — exactly what
@@ -15,6 +17,10 @@ import { searchProducts } from "@/lib/dummyjson";
 
 const PAGE_SIZE = 12;
 
+// Quick-search shortcuts. Each is a real query that returns results, so a visitor
+// who lands on an empty search has something to tap.
+const QUICK_TERMS = ["phone", "laptop", "watch", "perfume", "sunglasses", "shoes"];
+
 export async function generateMetadata({
   searchParams,
 }: {
@@ -24,29 +30,38 @@ export async function generateMetadata({
   return { title: q ? `Search: ${q}` : "Search" };
 }
 
-// Bold empty-state card on a soft tint.
-function EmptyState({ title, subtitle }: { title: string; subtitle?: string }) {
+// "Cherry on top": when there's no query yet, surface popular products so the
+// search page is useful immediately instead of showing a blank prompt. Its own
+// async component so it can stream inside a Suspense boundary.
+async function PopularProducts() {
+  const featured = await getFeaturedProducts(8);
   return (
-    <div className="rounded-5xl bg-tint-lemon py-20 text-center">
-      <p className="font-display text-3xl font-extrabold text-ink">{title}</p>
-      {subtitle && <p className="mt-2 text-ink/60">{subtitle}</p>}
-    </div>
+    <ProductRail
+      title={
+        <>
+          Popular <span className="text-pop-pink">right now</span>
+        </>
+      }
+      products={featured}
+    />
   );
 }
 
 // The results fetch lives in its own async component so it can be wrapped in
-// <Suspense>: the page shell (heading + search box) streams immediately and the
-// results stream in when the request resolves.
+// <Suspense>: the page shell (heading + search box + quick terms) streams
+// immediately and the results stream in when the request resolves.
 async function SearchResults({ q, page }: { q: string; page: number }) {
   const skip = (page - 1) * PAGE_SIZE;
   const data = await searchProducts(q, PAGE_SIZE, skip);
 
   if (data.products.length === 0) {
     return (
-      <EmptyState
-        title={`No results for “${q}”`}
-        subtitle="Try a different or more general search term."
-      />
+      <div className="rounded-5xl bg-tint-lemon py-20 text-center">
+        <p className="font-display text-3xl font-extrabold text-ink">
+          No results for “{q}”
+        </p>
+        <p className="mt-2 text-ink/60">Try a different or more general search term.</p>
+      </div>
     );
   }
 
@@ -86,12 +101,26 @@ export default async function SearchPage({
         <SearchBox initialQuery={query} />
       </div>
 
-      <div className="mt-8">
+      {/* Quick-search chips — handy on first visit. */}
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <span className="text-sm font-bold text-ink/50">Try:</span>
+        {QUICK_TERMS.map((term) => (
+          <Link
+            key={term}
+            href={`/search?q=${term}`}
+            className="rounded-full bg-white px-4 py-1.5 text-sm font-bold capitalize text-ink shadow-sm transition-transform duration-150 hover:-translate-y-0.5"
+          >
+            {term}
+          </Link>
+        ))}
+      </div>
+
+      <div className="mt-10">
         {query === "" ? (
-          <EmptyState
-            title="Start typing to search"
-            subtitle="Find products by name across the whole catalog."
-          />
+          // No query yet → stream popular products as a starting point.
+          <Suspense fallback={<GridSkeleton count={8} />}>
+            <PopularProducts />
+          </Suspense>
         ) : (
           // The key re-suspends the boundary on every new query/page, so the
           // skeleton shows for each fresh search instead of stale results.

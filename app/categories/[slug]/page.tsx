@@ -55,7 +55,7 @@ export default async function CategoryPage({
 
   return (
     <div className="wrap py-10">
-      <p className="text-sm font-bold uppercase tracking-[0.2em] text-pop-leaf">
+      <p className="text-sm font-bold uppercase tracking-[0.2em] text-pop-grape">
         Category
       </p>
       <div className="mt-1 flex items-end justify-between gap-4">

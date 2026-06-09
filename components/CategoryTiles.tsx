@@ -7,10 +7,8 @@ import type { Category } from "@/lib/types";
 const CHIPS = [
   "bg-pop-tangerine text-white",
   "bg-pop-sun text-ink",
-  "bg-pop-leaf text-white",
   "bg-pop-grape text-white",
   "bg-pop-pink text-white",
-  "bg-pop-forest text-white",
   "bg-pop-berry text-white",
   "bg-pop-plum text-white",
 ];

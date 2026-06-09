@@ -91,18 +91,24 @@ export default async function Home() {
       {/* ---------- MARQUEE BAND ---------- */}
       <section className="bg-ink py-4 text-paper">
         <div className="marquee-mask overflow-hidden">
-          <div className="flex w-max animate-marquee">
-            {/* Rendered twice so translateX(-50%) loops seamlessly. */}
+          <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
+            {/* Two IDENTICAL halves; the animation translates exactly -50% (one
+                half width), so the second half lands precisely where the first
+                started — a seamless loop. Each half repeats the word list enough
+                times to be wider than any viewport; otherwise the track would run
+                out of content and leave a blank gap on the right before resetting. */}
             {[0, 1].map((half) => (
               <div key={half} className="flex shrink-0 items-center" aria-hidden={half === 1}>
-                {MARQUEE.map((word) => (
-                  <span key={word} className="flex items-center">
-                    <span className="px-6 font-display text-2xl font-extrabold uppercase tracking-tight">
-                      {word}
+                {Array.from({ length: 4 }).flatMap((_, rep) =>
+                  MARQUEE.map((word, w) => (
+                    <span key={`${rep}-${w}`} className="flex items-center">
+                      <span className="px-6 font-display text-2xl font-extrabold uppercase tracking-tight">
+                        {word}
+                      </span>
+                      <span className="text-pop-sun">✦</span>
                     </span>
-                    <span className="text-pop-sun">✦</span>
-                  </span>
-                ))}
+                  )),
+                )}
               </div>
             ))}
           </div>
@@ -166,7 +172,7 @@ export default async function Home() {
       {/* ---------- CATALOG ---------- */}
       <section className="wrap">
         <h2 className="mb-6 font-display text-4xl font-extrabold sm:text-5xl">
-          Fresh from the <span className="text-pop-leaf">catalog</span>
+          Fresh from the <span className="text-pop-berry">catalog</span>
         </h2>
         {/* toneOffset shifts the pastel rotation so this grid's colors differ
             from the featured grid above. */}

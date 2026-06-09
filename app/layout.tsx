@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Toaster from "@/components/Toaster";
 
 // Display font: Bricolage Grotesque — a characterful, slightly quirky grotesque
 // that gives the big headlines personality (matching the bold, playful brand).
@@ -38,6 +39,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );
