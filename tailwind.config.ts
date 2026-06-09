@@ -9,22 +9,61 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Nat Habit brand palette — earthy, natural, calm. Defined once here so
-        // every component pulls from the same tokens instead of hardcoding hexes.
-        brand: {
-          cream: "#F7F4EE", // warm page background
-          ink: "#2B2A26", // warm near-black for body text
-          forest: { DEFAULT: "#3A5A40", dark: "#2C4433", light: "#588157" },
-          sage: "#A3B18A", // soft secondary accent
-          clay: "#B5654A", // warm accent used for prices
-          border: "#E7E1D6", // hairline borders that sit gently on cream
-          muted: "#6F7468", // secondary / helper text
+        // Warm paper base + near-black ink. Everything sits on `paper`.
+        paper: "#FBF3E7",
+        cream: "#FFFCF5",
+        ink: "#1A1207",
+
+        // The "popping" palette — saturated, candy-bright section/accent colors.
+        // Namespaced under `pop` so they never collide with Tailwind defaults.
+        pop: {
+          tangerine: "#FF5A1F",
+          sun: "#FFC42E",
+          leaf: "#1FA055",
+          forest: "#0E4D2E",
+          grape: "#7C3AED",
+          plum: "#3A1772",
+          pink: "#FF4F92",
+          berry: "#D62E6F",
+        },
+
+        // Soft pastel tints used as product-image backdrops so the products pop
+        // without fighting the bold section colors. Rotated across the grid.
+        tint: {
+          pink: "#FFD9E6",
+          mint: "#CDEFD7",
+          lemon: "#FFEFB0",
+          lilac: "#E7DAFB",
+          peach: "#FFDBC4",
+          sky: "#D2E8F6",
         },
       },
       fontFamily: {
-        // Wired to the next/font CSS variables set in app/layout.tsx.
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        serif: ["var(--font-serif)", "Georgia", "serif"],
+        // Display = Bricolage Grotesque (characterful, slightly quirky grotesque).
+        // Body = Hanken Grotesk (clean, friendly). Wired to next/font CSS vars.
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        body: ["var(--font-body)", "system-ui", "sans-serif"],
+        sans: ["var(--font-body)", "system-ui", "sans-serif"],
+      },
+      borderRadius: {
+        "4xl": "2rem",
+        "5xl": "2.75rem",
+      },
+      keyframes: {
+        // Infinite horizontal marquee for the scrolling wellness ticker.
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
+        // Gentle bob for decorative product images.
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+      },
+      animation: {
+        marquee: "marquee 22s linear infinite",
+        float: "float 6s ease-in-out infinite",
       },
     },
   },

@@ -3,9 +3,7 @@
 import { useEffect } from "react";
 
 // Root error boundary. Must be a Client Component (Next requirement) so it can
-// receive the `reset` callback that re-attempts rendering the segment. Any
-// uncaught error in a server component below this point lands here instead of a
-// blank screen.
+// receive the `reset` callback that re-attempts rendering the segment.
 export default function Error({
   error,
   reset,
@@ -19,18 +17,19 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="wrap flex min-h-[50vh] flex-col items-center justify-center gap-4 py-16 text-center">
-      <h1 className="font-serif text-2xl text-brand-ink">Something went wrong</h1>
-      <p className="text-brand-muted">
-        We couldn’t load this page. Please try again in a moment.
-      </p>
-      <button
-        type="button"
-        onClick={reset}
-        className="rounded-full bg-brand-forest px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-forest-dark"
-      >
-        Try again
-      </button>
+    <div className="wrap grid min-h-[50vh] place-items-center py-16 text-center">
+      <div>
+        <p className="font-display text-6xl font-extrabold text-pop-pink">oops</p>
+        <h1 className="mt-2 font-display text-3xl font-extrabold">
+          Something went wrong
+        </h1>
+        <p className="mt-3 text-ink/60">
+          We couldn’t load this page. Please try again in a moment.
+        </p>
+        <button type="button" onClick={reset} className="pill mt-6 bg-ink text-paper">
+          Try again
+        </button>
+      </div>
     </div>
   );
 }

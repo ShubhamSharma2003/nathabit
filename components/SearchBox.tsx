@@ -49,7 +49,7 @@ export default function SearchBox({ initialQuery }: { initialQuery: string }) {
       placeholder="Search products…"
       aria-label="Search products"
       autoFocus
-      className="w-full rounded-full border border-brand-border bg-white px-5 py-3 text-sm outline-none transition-colors focus:border-brand-forest"
+      className="w-full rounded-full border-2 border-ink/10 bg-white px-6 py-4 text-base font-medium text-ink outline-none transition-colors placeholder:text-ink/40 focus:border-pop-tangerine"
     />
   );
 }

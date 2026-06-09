@@ -55,12 +55,19 @@ export default async function CategoryPage({
 
   return (
     <div className="wrap py-10">
-      <h1 className="font-serif text-3xl capitalize text-brand-ink">
-        {category.name}
-      </h1>
-      <p className="mt-1 text-sm text-brand-muted">{data.total} products</p>
+      <p className="text-sm font-bold uppercase tracking-[0.2em] text-pop-leaf">
+        Category
+      </p>
+      <div className="mt-1 flex items-end justify-between gap-4">
+        <h1 className="font-display text-4xl font-extrabold capitalize leading-[0.95] sm:text-6xl">
+          {category.name}
+        </h1>
+        <p className="hidden shrink-0 text-sm font-bold text-ink/50 sm:block">
+          {data.total} products
+        </p>
+      </div>
 
-      <div className="mt-6">
+      <div className="mt-8">
         {/* First row marked priority for LCP, since this is the top of the page. */}
         <ProductGrid products={data.products} priorityCount={4} />
         <LoadMoreProducts

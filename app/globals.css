@@ -3,23 +3,52 @@
 @tailwind utilities;
 
 @layer base {
-  /* Body uses the warm sans; headings use the organic serif. Setting this once
-     here keeps individual components free of repetitive font classes. */
   body {
-    font-family: var(--font-sans), system-ui, sans-serif;
+    font-family: var(--font-body), system-ui, sans-serif;
   }
+
+  /* Display type is big, heavy, and tightly set — the signature of the look.
+     Headings get the display font + condensed leading + slight negative tracking
+     so the large headlines read as confident blocks. */
   h1,
   h2,
   h3,
   h4 {
-    font-family: var(--font-serif), Georgia, serif;
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
   }
 }
 
 @layer components {
-  /* Shared page-width wrapper. Every section uses this so content lines up on a
-     consistent grid and never touches the screen edges on mobile. */
+  /* Shared page-width wrapper so every section lines up on one grid. */
   .wrap {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Solid pill button — the recurring round CTA from the reference. */
+  .pill {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0;
+  }
+}
+
+@layer utilities {
+  /* Mask used by the marquee so the scrolling text fades at both edges. */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
   }
 }

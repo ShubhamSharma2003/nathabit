@@ -45,20 +45,20 @@ export default function LoadMoreProducts({
           count (2/3/4), so each grid starts on a fresh full row and the two
           grids read as one continuous list. */}
       {extra.length > 0 && (
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {extra.map((p) => (
-            <ProductCard key={p.id} product={p} />
+        <div className="mt-8 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {extra.map((p, i) => (
+            <ProductCard key={p.id} product={p} tone={i} />
           ))}
         </div>
       )}
 
       {hasMore && (
-        <div className="mt-8 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <button
             type="button"
             onClick={loadMore}
             disabled={loading}
-            className="rounded-full border border-brand-forest px-6 py-2 text-sm font-semibold text-brand-forest transition-colors hover:bg-brand-forest hover:text-white disabled:opacity-50"
+            className="pill bg-ink text-paper disabled:opacity-50"
           >
             {loading ? "Loading…" : "Load more"}
           </button>

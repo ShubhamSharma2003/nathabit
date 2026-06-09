@@ -20,7 +20,7 @@ Data comes from the public [DummyJSON Products API](https://dummyjson.com/docs/p
 | Styling | Tailwind CSS |
 | State | Zustand (wishlist, persisted to localStorage) |
 | Images | `next/image` |
-| Fonts | `next/font` (Nunito + Fraunces, self-hosted) |
+| Fonts | `next/font` (Bricolage Grotesque + Hanken Grotesk, self-hosted) |
 
 ---
 

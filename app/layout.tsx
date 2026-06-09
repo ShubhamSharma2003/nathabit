@@ -1,20 +1,26 @@
 import type { Metadata } from "next";
-import { Nunito, Fraunces } from "next/font/google";
+import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-// Body font: Nunito is rounded and friendly, which suits Nat Habit's natural,
-// gentle brand feel. We expose it as a CSS variable so Tailwind can reference it.
-const sans = Nunito({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+// Display font: Bricolage Grotesque — a characterful, slightly quirky grotesque
+// that gives the big headlines personality (matching the bold, playful brand).
+// Loaded as a variable font so we can push it to heavy weights for display type.
+const display = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
 
-// Heading font: Fraunces is an organic serif that gives an editorial, premium
-// tone — good contrast against the rounded body text.
-const serif = Fraunces({ subsets: ["latin"], variable: "--font-serif", display: "swap" });
+// Body font: Hanken Grotesk — clean and friendly, readable at small sizes.
+const body = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  // A title template brands every page automatically; pages set their own
-  // `title` (e.g. a product name) and "· Nat Habit" is appended.
   title: {
     default: "Nat Habit — Natural Product Storefront",
     template: "%s · Nat Habit",
@@ -27,11 +33,9 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    // Font variables go on <html> so they apply everywhere, including portals.
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
-      <body className="flex min-h-screen flex-col bg-brand-cream text-brand-ink antialiased">
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
+      <body className="flex min-h-screen flex-col bg-paper text-ink antialiased">
         <Header />
-        {/* flex-1 pushes the footer to the bottom on short pages. */}
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

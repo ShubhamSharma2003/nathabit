@@ -39,22 +39,22 @@ export default function LiveStock({ id }: { id: number }) {
   // shift the layout.
   if (!data) {
     return (
-      <span className="inline-block h-7 w-40 animate-pulse rounded-full bg-brand-border/40" />
+      <span className="inline-block h-8 w-44 animate-pulse rounded-full bg-ink/10" />
     );
   }
 
   const out = data.stock <= 0;
   const low = !out && data.stock <= 10;
   const tone = out
-    ? "bg-red-50 text-red-700"
+    ? "bg-pop-berry/10 text-pop-berry"
     : low
-      ? "bg-amber-50 text-amber-700"
-      : "bg-brand-forest/10 text-brand-forest";
+      ? "bg-pop-sun/25 text-ink"
+      : "bg-pop-leaf/15 text-pop-leaf";
   const label = out ? "Out of stock" : `${data.availabilityStatus} · ${data.stock} left`;
 
   return (
     <span
-      className={`inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ${tone}`}
+      className={`inline-flex w-fit items-center gap-2 rounded-full px-4 py-1.5 text-sm font-bold ${tone}`}
     >
       <span className="h-2 w-2 rounded-full bg-current" />
       {label}

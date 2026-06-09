@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProduct, getProductsPage, NotFoundError } from "@/lib/dummyjson";
@@ -10,16 +11,14 @@ import LiveStock from "@/components/LiveStock";
 // RENDERING STRATEGY: ISR.
 // A product's SEO content (title, description, image) rarely changes and prices
 // change only every few hours, so we statically generate the page and regenerate
-// at most hourly. This keeps it fast for the search-engine traffic these pages
-// receive, while staying fresh enough on price. (Live stock is handled by the
-// client component above — see LiveStock for why.)
+// at most hourly — fast for the search-engine traffic these pages receive, while
+// staying fresh on price. (Live stock is handled by the client component below.)
 export const revalidate = 3600;
 
-// Pre-render a small set of products at build time so the most-visited pages are
-// instant and fully crawlable. DummyJSON exposes no popularity signal, so we
-// approximate "popular" with the first 30 products. Every other product id is
-// generated on first request and then cached (ISR's on-demand fallback, enabled
-// by the default dynamicParams = true).
+// Pre-render a small set of products at build so the most-visited pages are
+// instant and crawlable. DummyJSON exposes no popularity signal, so we
+// approximate "popular" with the first 30 products. Every other id is generated
+// on first request, then cached (ISR's on-demand fallback via dynamicParams).
 export async function generateStaticParams() {
   const { products } = await getProductsPage(30, 0);
   return products.map((p) => ({ id: String(p.id) }));
@@ -66,9 +65,8 @@ export default async function ProductPage({
   try {
     product = await getProduct(id);
   } catch (err) {
-    // Translate our typed 404 into Next's notFound() → real 404 status +
-    // not-found.tsx. Anything else is a genuine error, so re-throw to the
-    // error boundary.
+    // Translate our typed 404 into Next's notFound(); re-throw anything else so
+    // the error boundary handles it.
     if (err instanceof NotFoundError) notFound();
     throw err;
   }
@@ -80,49 +78,53 @@ export default async function ProductPage({
 
   return (
     <div className="wrap py-10">
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Main image. It's the LCP element here, so it loads with priority. The
-            fixed aspect ratio reserves its space to avoid layout shift. */}
-        <div className="relative aspect-square overflow-hidden rounded-3xl border border-brand-border bg-white">
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Main image on a tinted panel. It's the LCP element, so it loads with
+            priority; the fixed aspect ratio reserves its space (no CLS). */}
+        <div className="relative aspect-square overflow-hidden rounded-5xl bg-tint-mint">
           <Image
             src={product.images[0] ?? product.thumbnail}
             alt={product.title}
             fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-contain p-6"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-contain p-10"
             priority
           />
-          <div className="absolute right-4 top-4">
+          <div className="absolute right-5 top-5">
             <WishlistButton productId={product.id} />
           </div>
         </div>
 
         {/* Details */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
+          <Link
+            href={`/categories/${product.category}`}
+            className="w-fit rounded-full bg-pop-leaf/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-pop-leaf transition-colors hover:bg-pop-leaf hover:text-white"
+          >
+            {product.category}
+          </Link>
+
           <div>
-            <span className="text-xs uppercase tracking-wide text-brand-muted">
-              {product.category}
-            </span>
-            <h1 className="mt-1 font-serif text-3xl text-brand-ink">
+            <h1 className="font-display text-4xl font-extrabold leading-[0.95] sm:text-5xl">
               {product.title}
             </h1>
             {product.brand && (
-              <p className="text-sm text-brand-muted">by {product.brand}</p>
+              <p className="mt-2 text-ink/50">by {product.brand}</p>
             )}
           </div>
 
           <Rating value={product.rating} />
 
           <div className="flex flex-wrap items-baseline gap-3">
-            <span className="text-3xl font-semibold text-brand-forest">
+            <span className="font-display text-4xl font-extrabold text-ink">
               {formatPrice(finalPrice)}
             </span>
             {hasDiscount && (
               <>
-                <span className="text-lg text-brand-muted line-through">
+                <span className="text-lg text-ink/40 line-through">
                   {formatPrice(product.price)}
                 </span>
-                <span className="rounded-full bg-brand-clay/10 px-2 py-0.5 text-sm font-medium text-brand-clay">
+                <span className="rounded-full bg-pop-berry px-2.5 py-1 text-sm font-bold text-white">
                   -{Math.round(product.discountPercentage)}%
                 </span>
               </>
@@ -132,9 +134,11 @@ export default async function ProductPage({
           {/* Volatile inventory, fetched fresh on the client. */}
           <LiveStock id={product.id} />
 
-          <p className="mt-2 leading-relaxed text-brand-ink/80">
+          <p className="mt-1 max-w-prose text-lg leading-relaxed text-ink/70">
             {product.description}
           </p>
+
+          <p className="text-sm text-ink/45">Tap the ♥ on the image to save this to your wishlist.</p>
         </div>
       </div>
     </div>
